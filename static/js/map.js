@@ -170,33 +170,24 @@ function addMarkers(bars) {
     handleMapResize();
 }
 
-function drawRoute(route) {
-    // Clear existing route
+function drawRoute(route, directions) {
+    // Clear existing polylines
     if (polyline) {
-        polyline.setMap(null);
+        if (Array.isArray(polyline)) {
+            polyline.forEach(line => line.setMap(null));
+        } else {
+            polyline.setMap(null);
+        }
     }
     
-    // Create path from route points
-    const path = route.map(bar => ({
-        lat: bar.location.lat,
-        lng: bar.location.lng
-    }));
-    
-    // Create polyline
-    polyline = new google.maps.Polyline({
-        path: path,
-        geodesic: true,
-        strokeColor: "#2196F3",
-        strokeOpacity: 1.0,
-        strokeWeight: 3
-    });
-    
-    polyline.setMap(map);
+    // Initialize polyline array
+    polyline = [];
     
     // Re-label markers
     markers.forEach(marker => marker.setMap(null));
     markers = [];
     
+    // Add markers for each bar in the route
     route.forEach((bar, index) => {
         const marker = new google.maps.Marker({
             position: { lat: bar.location.lat, lng: bar.location.lng },
@@ -209,6 +200,49 @@ function drawRoute(route) {
         });
         markers.push(marker);
     });
+    
+    // If we have directions with encoded paths
+    if (directions && directions.routes && directions.routes.length > 0) {
+        // For each leg of the journey
+        directions.routes.forEach(route => {
+            // Get encoded polyline path
+            const encodedPath = route.path;
+            if (encodedPath) {
+                // Decode the polyline
+                const decodedPath = google.maps.geometry.encoding.decodePath(encodedPath);
+                
+                // Create a new polyline for this leg
+                const pathLine = new google.maps.Polyline({
+                    path: decodedPath,
+                    geodesic: true,
+                    strokeColor: "#2196F3",
+                    strokeOpacity: 1.0,
+                    strokeWeight: 3
+                });
+                
+                // Add the polyline to the map
+                pathLine.setMap(map);
+                polyline.push(pathLine);
+            }
+        });
+    } else {
+        // Fallback to direct lines if no path data
+        const simplePath = route.map(bar => ({
+            lat: bar.location.lat,
+            lng: bar.location.lng
+        }));
+        
+        const simpleLine = new google.maps.Polyline({
+            path: simplePath,
+            geodesic: true,
+            strokeColor: "#2196F3",
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+        });
+        
+        simpleLine.setMap(map);
+        polyline.push(simpleLine);
+    }
     
     // Adjust map view after route is drawn
     handleMapResize();

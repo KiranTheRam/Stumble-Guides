@@ -361,8 +361,8 @@ async function generateRoute() {
         totalDistance.textContent = routeInfo.directions.total_distance_text;
         totalTime.textContent = routeInfo.directions.total_duration_text;
         
-        // Draw route on map
-        drawRoute(routeInfo.route);
+        // Draw route on map with directions data
+        drawRoute(routeInfo.route, routeInfo.directions);
         
     } catch (error) {
         console.error('Error generating route:', error);

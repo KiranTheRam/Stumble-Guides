@@ -12,7 +12,7 @@ def get_directions(bars):
         bars: List of bar objects in order of visit
         
     Returns:
-        Directions object with routes and estimated walking times
+        Directions object with routes and estimated walking times, including path data
     """
     if len(bars) < 2:
         return {
@@ -43,6 +43,10 @@ def get_directions(bars):
         
         if data['status'] == 'OK' and data['routes']:
             leg = data['routes'][0]['legs'][0]
+            
+            # Extract polyline path from the response
+            overview_polyline = data['routes'][0].get('overview_polyline', {}).get('points', '')
+            
             route = {
                 'start_address': leg['start_address'],
                 'end_address': leg['end_address'],
@@ -52,17 +56,22 @@ def get_directions(bars):
                 'duration_value': leg['duration']['value'],  # in seconds
                 'steps': leg['steps'],
                 'start_location': leg['start_location'],
-                'end_location': leg['end_location']
+                'end_location': leg['end_location'],
+                'path': overview_polyline  # Add encoded polyline path
             }
             
             routes.append(route)
             total_distance += leg['distance']['value']
             total_duration += leg['duration']['value']
+
+            # convert meters to miles
+            total_distance = round(total_distance * 0.000621371, 2)
     
     return {
         'routes': routes,
         'total_distance': total_distance,
-        'total_distance_text': f"{total_distance / 1000:.1f} km",
+        # 'total_distance_text': f"{total_distance / 1000:.1f} km",
+        'total_distance_text': f"{total_distance} mi",
         'total_duration': total_duration,
         'total_duration_text': format_duration(total_duration)
     }
