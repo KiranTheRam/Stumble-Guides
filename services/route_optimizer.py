@@ -33,7 +33,7 @@ def optimize_route(bars):
         
         route.append(nearest)
         unvisited.remove(nearest)
-    
+    print("Route: ", route)
     return route
 
 def calculate_distance(lat1, lng1, lat2, lng2):
@@ -55,5 +55,5 @@ def calculate_distance(lat1, lng1, lat2, lng2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     
     distance = R * c
-    
+    print("Distance is {}", distance)
     return distance

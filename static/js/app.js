@@ -292,7 +292,12 @@ async function generateRoute() {
         }
         
         routeInfo = await response.json();
-        
+        console.log(routeInfo)
+        console.log("_______________________________")
+        console.log(routeInfo.total_distance_text)
+        console.log("_______________________________")
+        console.log(routeInfo.total_duration_text)
+
         // Update UI
         totalDistance.textContent = routeInfo.total_distance_text;
         totalTime.textContent = routeInfo.total_duration_text;

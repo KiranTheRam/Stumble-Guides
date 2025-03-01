@@ -29,6 +29,9 @@ def find_bars():
 
 @app.route('/api/route', methods=['POST'])
 def generate_route():
+    print(request)
+    print("______________")
+    print(request.json)
     data = request.json
     selected_bars = data.get('selectedBars', [])
     
@@ -37,7 +40,10 @@ def generate_route():
     
     # Get directions between locations
     directions = get_directions(optimized_route)
-    
+
+    print("Route: ", optimized_route)
+    print("directions: ", directions)
+
     return jsonify({
         'route': optimized_route,
         'directions': directions
