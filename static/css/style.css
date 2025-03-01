@@ -23,6 +23,7 @@ body {
 }
 
 .container {
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -36,6 +37,11 @@ header {
 header h1 {
     color: var(--primary-dark);
     margin-bottom: 10px;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+header p {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
 }
 
 /* Search Controls */
@@ -59,7 +65,7 @@ header h1 {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .control-group {
@@ -82,10 +88,12 @@ header h1 {
 .location-input-container {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .location-input-container input {
     flex: 1;
+    min-width: 200px;
     padding: 8px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -120,6 +128,7 @@ input[type="range"], input[type="number"] {
 
 .price-filter {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .price-btn {
@@ -145,6 +154,8 @@ input[type="range"], input[type="number"] {
     cursor: pointer;
     font-weight: 500;
     transition: background-color 0.2s;
+    width: fit-content;
+    align-self: center;
 }
 
 .primary-btn:hover {
@@ -159,8 +170,10 @@ input[type="range"], input[type="number"] {
 /* Main Content Layout */
 .main-content {
     display: flex;
+    flex-direction: row;
     gap: 20px;
-    height: 600px;
+    height: calc(100vh - 250px);
+    min-height: 500px;
 }
 
 .map-container {
@@ -169,6 +182,7 @@ input[type="range"], input[type="number"] {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
 }
 
 #map {
@@ -183,6 +197,7 @@ input[type="range"], input[type="number"] {
     gap: 20px;
     height: 100%;
     overflow: hidden;
+    min-width: 280px;
 }
 
 .bars-list, .selected-bars {
@@ -194,11 +209,13 @@ input[type="range"], input[type="number"] {
     flex-direction: column;
     flex: 1;
     overflow: hidden;
+    min-height: 200px;
 }
 
 .bars-list h2, .selected-bars h2 {
     color: var(--primary-dark);
     margin-bottom: 5px;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
 }
 
 .helper-text {
@@ -230,11 +247,16 @@ input[type="range"], input[type="number"] {
 .bar-details {
     padding: 10px;
     flex: 1;
+    min-width: 0; /* Prevents flex items from overflowing */
 }
 
 .bar-name {
     font-weight: 500;
     margin-bottom: 5px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .bar-meta {
@@ -257,6 +279,13 @@ input[type="range"], input[type="number"] {
 
 .bar-price {
     color: #4CAF50;
+}
+
+.bar-address {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.85rem;
 }
 
 /* Drag and Drop Styles */
@@ -284,6 +313,7 @@ input[type="range"], input[type="number"] {
     background-color: var(--primary-light);
     padding: 10px;
     border-radius: 4px;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 /* Containers with scrolling */
@@ -311,10 +341,31 @@ input[type="range"], input[type="number"] {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .main-content {
-        flex-direction: column;
         height: auto;
+        flex-direction: column;
+    }
+    
+    .map-container {
+        height: 400px;
+        flex: none;
+    }
+    
+    .sidebar {
+        height: auto;
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .control-group {
+        min-width: 100%;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        gap: 15px;
     }
     
     .map-container {
@@ -322,10 +373,50 @@ input[type="range"], input[type="number"] {
     }
     
     .sidebar {
-        height: auto;
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .search-controls {
+        padding: 15px;
+    }
+    
+    .location-input-container {
+        flex-direction: column;
+    }
+    
+    .location-input-container input {
+        min-width: 100%;
     }
     
     .bars-list, .selected-bars {
-        max-height: 400px;
+        padding: 10px;
+    }
+    
+    .bar-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 400px) {
+    .primary-btn, .secondary-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .bar-image {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .bar-details {
+        padding: 5px;
     }
 }

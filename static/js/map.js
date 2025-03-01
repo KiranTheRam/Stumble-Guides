@@ -80,8 +80,55 @@ function initMap(center = { lat: 39.9566, lng: -75.1899 }) {
     
     // Set up the custom location button event listener
     document.getElementById('use-custom-location-btn').addEventListener('click', useCustomLocation);
+    
+    // Handle window resize for responsive map
+    window.addEventListener('resize', function() {
+        handleMapResize();
+    });
+    
+    // Initial resize handling
+    handleMapResize();
 }
 
+// Handle responsive map resizing
+function handleMapResize() {
+    if (map) {
+        // Force the map to recalculate dimensions
+        google.maps.event.trigger(map, 'resize');
+        
+        // Re-center the map
+        if (locationMarker) {
+            map.setCenter(locationMarker.getPosition());
+        }
+        
+        // Adjust zoom based on screen size
+        const width = window.innerWidth;
+        if (width < 576) {
+            map.setZoom(13); // Smaller zoom for mobile
+        } else if (width < 992) {
+            map.setZoom(14); // Medium zoom for tablets
+        } else {
+            map.setZoom(14); // Default zoom for desktops
+        }
+        
+        // Fit bounds if markers exist
+        if (markers.length > 0) {
+            const bounds = new google.maps.LatLngBounds();
+            markers.forEach(marker => bounds.extend(marker.getPosition()));
+            map.fitBounds(bounds);
+            
+            // Don't zoom in too far on mobile
+            const listener = google.maps.event.addListener(map, "idle", () => {
+                if (width < 576 && map.getZoom() > 15) {
+                    map.setZoom(15);
+                } else if (map.getZoom() > 16) {
+                    map.setZoom(16);
+                }
+                google.maps.event.removeListener(listener);
+            });
+        }
+    }
+}
 
 function addMarkers(bars) {
     // Clear existing markers
@@ -100,14 +147,14 @@ function addMarkers(bars) {
             animation: google.maps.Animation.DROP
         });
         
-        // Add info window
+        // Add info window with responsive sizing
         const infoWindow = new google.maps.InfoWindow({
             content: `
-                <div class="info-window">
-                    <h3>${bar.name}</h3>
-                    <p>${bar.address}</p>
-                    <p>Rating: ${bar.rating} ★</p>
-                    <p>Price: ${getPrice(bar.price_level)}</p>
+                <div class="info-window" style="max-width: ${window.innerWidth < 576 ? '200px' : '300px'}">
+                    <h3 style="font-size: ${window.innerWidth < 576 ? '14px' : '16px'}; margin-bottom: 5px;">${bar.name}</h3>
+                    <p style="font-size: ${window.innerWidth < 576 ? '12px' : '14px'}; margin-bottom: 3px;">${bar.address}</p>
+                    <p style="font-size: ${window.innerWidth < 576 ? '12px' : '14px'}; margin-bottom: 3px;">Rating: ${bar.rating} ★</p>
+                    <p style="font-size: ${window.innerWidth < 576 ? '12px' : '14px'};">Price: ${getPrice(bar.price_level)}</p>
                 </div>
             `
         });
@@ -119,18 +166,8 @@ function addMarkers(bars) {
         markers.push(marker);
     });
     
-    // Fit map to markers
-    if (markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        markers.forEach(marker => bounds.extend(marker.getPosition()));
-        map.fitBounds(bounds);
-        
-        // Don't zoom in too far
-        const listener = google.maps.event.addListener(map, "idle", () => {
-            if (map.getZoom() > 16) map.setZoom(16);
-            google.maps.event.removeListener(listener);
-        });
-    }
+    // Fit map to markers with responsiveness in mind
+    handleMapResize();
 }
 
 function drawRoute(route) {
@@ -172,6 +209,9 @@ function drawRoute(route) {
         });
         markers.push(marker);
     });
+    
+    // Adjust map view after route is drawn
+    handleMapResize();
 }
 
 function clearMarkers() {

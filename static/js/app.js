@@ -39,7 +39,62 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Enable drag & drop for selected bars
     makeBarsSortable();
+    
+    // Handle window resize events for layout adjustments
+    window.addEventListener('resize', handleWindowResize);
+    
+    // Initial responsive adjustments
+    handleWindowResize();
 });
+
+// Handle responsive layout adjustments
+function handleWindowResize() {
+    const width = window.innerWidth;
+    
+    // Adjust UI based on screen size
+    if (width < 576) {
+        // Mobile adjustments
+        if (barLimitInput.value > 5) {
+            barLimitInput.value = 5; // Reduce max bars on mobile
+        }
+    }
+    
+    // Refresh layout for drag and drop if active
+    if (selectedBars.length > 0) {
+        makeBarsSortable();
+    }
+    
+    // Update bar cards to fit screen
+    updateCardDisplay();
+}
+
+// Update display of all bar cards for responsive layout
+function updateCardDisplay() {
+    // Update displayed bars
+    const displayedCards = document.querySelectorAll('.bar-card');
+    displayedCards.forEach(card => {
+        const nameElement = card.querySelector('.bar-name');
+        const addressElement = card.querySelector('.bar-address');
+        
+        // Adjust text display based on screen width
+        if (window.innerWidth < 400) {
+            if (nameElement && nameElement.textContent.length > 15) {
+                const originalName = nameElement.textContent;
+                nameElement.setAttribute('title', originalName);
+                // Truncate with ellipsis
+                if (!nameElement.hasAttribute('data-original')) {
+                    nameElement.setAttribute('data-original', originalName);
+                }
+                nameElement.textContent = originalName.substring(0, 15) + '...';
+            }
+        } else {
+            // Restore original name if available
+            if (nameElement && nameElement.hasAttribute('data-original')) {
+                nameElement.textContent = nameElement.getAttribute('data-original');
+            }
+        }
+    });
+}
 
 // Update radius display
 function updateRadiusDisplay() {
@@ -93,6 +148,9 @@ async function findBars() {
         displayBars(allBars);
         addMarkers(allBars);
         
+        // Handle responsive adjustments for new bars
+        handleWindowResize();
+        
     } catch (error) {
         console.error('Error finding bars:', error);
         alert('Error finding bars. Please try again.');
@@ -138,6 +196,9 @@ function displayBars(bars) {
         
         barsContainer.appendChild(barCard);
     });
+    
+    // Apply responsive adjustments to new cards
+    updateCardDisplay();
 }
 
 // Toggle bar selection
@@ -199,6 +260,9 @@ function updateSelectedBarsUI() {
     
     // Refresh drag and drop
     makeBarsSortable();
+    
+    // Apply responsive adjustments to selected cards
+    updateCardDisplay();
 }
 
 // Make selected bars sortable (drag and drop)
@@ -292,15 +356,10 @@ async function generateRoute() {
         }
         
         routeInfo = await response.json();
-        console.log(routeInfo)
-        console.log("_______________________________")
-        console.log(routeInfo.total_distance_text)
-        console.log("_______________________________")
-        console.log(routeInfo.total_duration_text)
-
+        
         // Update UI
-        totalDistance.textContent = routeInfo.total_distance_text;
-        totalTime.textContent = routeInfo.total_duration_text;
+        totalDistance.textContent = routeInfo.directions.total_distance_text;
+        totalTime.textContent = routeInfo.directions.total_duration_text;
         
         // Draw route on map
         drawRoute(routeInfo.route);
