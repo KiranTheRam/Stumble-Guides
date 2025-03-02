@@ -1,4 +1,4 @@
-<!-- templates/index.html -->
+<!-- templates/index.html (Modified) -->
 <!DOCTYPE html>
 <html lang="en" class="dark-mode">
 <head>
@@ -15,75 +15,193 @@
             <p>Plan your perfect night out with the best bars in your area</p>
             <button id="theme-toggle" class="theme-toggle">☀️</button>
         </header>
+
+        <!-- Navigation Bar -->
+        <nav class="nav-bar">
+            <ul>
+                <li><a href="#" class="nav-link active" data-page="home">Bar Finder</a></li>
+                <li><a href="#" class="nav-link" data-page="bac-calculator">BAC Calculator</a></li>
+            </ul>
+        </nav>
         
-        <!-- Location Panel -->
-        <div class="search-panel">
-            <h3 class="panel-title">Location</h3>
-            <div class="location-control">
-                <div class="control-group location-input">
-                    <label for="custom-location">Custom Location:</label>
-                    <div class="location-input-container">
-                        <input type="text" id="custom-location" placeholder="Enter address or place">
-                        <button id="use-custom-location-btn" class="secondary-btn">Use Location</button>
-                    </div>
-                    <div class="location-info">
-                        <span id="current-location-type">Using: Default Location (Drexel University)</span>
+        <!-- Home Page Content -->
+        <div id="home-page" class="page active-page">
+            <!-- Location Panel -->
+            <div class="search-panel">
+                <h3 class="panel-title">Location</h3>
+                <div class="location-control">
+                    <div class="control-group location-input">
+                        <label for="custom-location">Custom Location:</label>
+                        <div class="location-input-container">
+                            <input type="text" id="custom-location" placeholder="Enter address or place">
+                            <button id="use-custom-location-btn" class="secondary-btn">Use Location</button>
+                        </div>
+                        <div class="location-info">
+                            <span id="current-location-type">Using: Default Location (Drexel University)</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Search Filters Panel -->
-        <div class="search-panel">
-            <h3 class="panel-title">Search Filters</h3>
-            <div class="filter-controls">
-                <div class="control-group">
-                    <label for="radius">Search Radius:</label>
-                    <input type="range" id="radius" min="0.5" max="5" step="0.5" value="1">
-                    <span id="radius-value">1 mile</span>
+            
+            <!-- Search Filters Panel -->
+            <div class="search-panel">
+                <h3 class="panel-title">Search Filters</h3>
+                <div class="filter-controls">
+                    <div class="control-group">
+                        <label for="radius">Search Radius:</label>
+                        <input type="range" id="radius" min="0.5" max="5" step="0.5" value="1">
+                        <span id="radius-value">1 mile</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="price-range">Price Range:</label>
+                        <div class="price-filter">
+                            <button class="price-btn active" data-value="1">$</button>
+                            <button class="price-btn active" data-value="2">$$</button>
+                            <button class="price-btn active" data-value="3">$$$</button>
+                            <button class="price-btn active" data-value="4">$$$$</button>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="control-group">
-                    <label for="price-range">Price Range:</label>
-                    <div class="price-filter">
-                        <button class="price-btn active" data-value="1">$</button>
-                        <button class="price-btn active" data-value="2">$$</button>
-                        <button class="price-btn active" data-value="3">$$$</button>
-                        <button class="price-btn active" data-value="4">$$$$</button>
+                <button id="find-bars-btn" class="primary-btn">Find Bars</button>
+            </div>
+            
+            <div class="main-content">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                
+                <div class="sidebar">
+                    <div id="bars-list" class="bars-list">
+                        <h2>Bars in Your Area</h2>
+                        <p class="helper-text">Select bars to include in your crawl</p>
+                        <div id="bars-container"></div>
                     </div>
                 </div>
             </div>
             
-            <button id="find-bars-btn" class="primary-btn">Find Bars</button>
+            <div id="selected-bars" class="selected-bars-full-width">
+                <h2>Your Bar Crawl</h2>
+                <p class="helper-text">Drag to reorder bars</p>
+                <div id="selected-bars-container"></div>
+                <div class="route-info">
+                    <p>Total Distance: <span id="total-distance">-</span></p>
+                    <p>Total Walking Time: <span id="total-time">-</span></p>
+                </div>
+                <button id="generate-route-btn" class="primary-btn" disabled>Generate Route</button>
+            </div>
         </div>
         
-        <div class="main-content">
-            <div class="map-container">
-                <div id="map"></div>
+        <!-- BAC Calculator Page -->
+        <div id="bac-calculator-page" class="page">
+            <!-- Personal Information Section -->
+            <div class="search-panel">
+                <h3 class="panel-title">Personal Information</h3>
+                <div class="filter-controls">
+                    <div class="control-group">
+                        <label for="weight">Weight (kg):</label>
+                        <input type="number" id="weight" min="30" max="200" value="70">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" class="form-select">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="height">Height (cm):</label>
+                        <input type="number" id="height" min="100" max="250" value="170">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="meal-status">Meal Status:</label>
+                        <select id="meal-status" class="form-select">
+                            <option value="empty">Empty Stomach</option>
+                            <option value="light" selected>Light Meal</option>
+                            <option value="full">Full Meal</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="save-personal-info-btn" class="primary-btn">Save Personal Info</button>
             </div>
             
-            <div class="sidebar">
-                <div id="bars-list" class="bars-list">
-                    <h2>Bars in Your Area</h2>
-                    <p class="helper-text">Select bars to include in your crawl</p>
-                    <div id="bars-container"></div>
+            <!-- Drink Tracker Section -->
+            <div class="search-panel">
+                <h3 class="panel-title">Add Drink</h3>
+                <div class="filter-controls">
+                    <div class="control-group">
+                        <label for="drink-type">Drink Type:</label>
+                        <select id="drink-type" class="form-select">
+                            <option value="beer">Beer (5%)</option>
+                            <option value="wine">Wine (12%)</option>
+                            <option value="spirit">Spirit (40%)</option>
+                            <option value="cocktail">Cocktail (varies)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="custom-abv-container" style="display: none;">
+                        <label for="custom-abv">Alcohol % (ABV):</label>
+                        <input type="number" id="custom-abv" min="0" max="100" value="5">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="drink-size">Size (ml):</label>
+                        <input type="number" id="drink-size" min="0" max="1000" value="330">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="time-consumed">Time Consumed:</label>
+                        <input type="datetime-local" id="time-consumed">
+                    </div>
+                </div>
+                
+                <button id="add-drink-btn" class="primary-btn">Add Drink</button>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="search-panel">
+                <h3 class="panel-title">BAC Calculation Results</h3>
+                <div class="bac-results">
+                    <div class="bac-meter-container">
+                        <div class="bac-meter">
+                            <div class="bac-meter-fill" style="width: 0%;"></div>
+                        </div>
+                        <div class="bac-value">Current BAC: <span id="current-bac">0.00%</span></div>
+                    </div>
+                    
+                    <div class="bac-info">
+                        <p>Estimated time until sober: <span id="time-until-sober">0 hours</span></p>
+                        <p>Estimated time until safe to drive (<0.05%): <span id="time-until-drive">0 hours</span></p>
+                        <p>Drinks consumed today: <span id="drinks-count">0</span></p>
+                    </div>
+                    
+                    <div class="status-indicator">
+                        <div id="status-message" class="status-message safe">
+                            You are sober and safe to drive.
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div id="selected-bars" class="selected-bars-full-width">
-            <h2>Your Bar Crawl</h2>
-            <p class="helper-text">Drag to reorder bars</p>
-            <div id="selected-bars-container"></div>
-            <div class="route-info">
-                <p>Total Distance: <span id="total-distance">-</span></p>
-                <p>Total Walking Time: <span id="total-time">-</span></p>
+            
+            <!-- Drink History Section -->
+            <div class="search-panel">
+                <h3 class="panel-title">Drink History</h3>
+                <div id="drink-history-container" class="drink-history">
+                    <p class="helper-text">No drinks logged yet. Add drinks above to track your consumption.</p>
+                </div>
             </div>
-            <button id="generate-route-btn" class="primary-btn" disabled>Generate Route</button>
         </div>
     </div>
     
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bac-calculator.js') }}"></script>
 </body>
 </html>

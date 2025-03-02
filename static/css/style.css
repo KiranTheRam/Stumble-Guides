@@ -79,6 +79,54 @@ header p {
     background-color: var(--light-gray);
 }
 
+/* Navigation Bar Styles */
+.nav-bar {
+    margin-bottom: 20px;
+}
+
+.nav-bar ul {
+    display: flex;
+    list-style: none;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.nav-bar li {
+    flex: 1;
+}
+
+.nav-bar .nav-link {
+    display: block;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+}
+
+.nav-bar .nav-link:hover {
+    background-color: var(--light-gray);
+}
+
+.nav-bar .nav-link.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    background-color: var(--light-gray);
+}
+
+/* Page display control */
+.page {
+    display: none;
+}
+
+.active-page {
+    display: block;
+}
+
 /* Search Panel */
 .search-panel {
     background-color: var(--card-background);
@@ -169,6 +217,25 @@ header p {
 input[type="range"], input[type="number"] {
     width: 100%;
     padding: 5px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Form controls for BAC calculator */
+.form-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+input[type="datetime-local"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     background-color: var(--background-color);
     color: var(--text-color);
 }
@@ -421,6 +488,100 @@ input[type="range"], input[type="number"] {
     justify-content: center;
 }
 
+/* BAC Meter styling */
+.bac-meter-container {
+    margin: 20px 0;
+}
+
+.bac-meter {
+    height: 30px;
+    background-color: var(--light-gray);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bac-meter-fill {
+    height: 100%;
+    background: linear-gradient(to right, #4CAF50, #FFEB3B, #F44336);
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+    border-radius: 15px;
+}
+
+.bac-value {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.bac-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.status-indicator {
+    margin: 20px 0;
+}
+
+.status-message {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.status-message.safe {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #2E7D32;
+}
+
+.status-message.caution {
+    background-color: rgba(255, 235, 59, 0.2);
+    color: #F57F17;
+}
+
+.status-message.danger {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #C62828;
+}
+
+/* Drink history styling */
+.drink-history {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.drink-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.drink-info {
+    flex: 1;
+}
+
+.drink-time {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.drink-delete {
+    color: #f44336;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 992px) {
     .main-content {
@@ -460,6 +621,14 @@ input[type="range"], input[type="number"] {
     #selected-bars-container {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
+    
+    .bac-info {
+        flex-direction: column;
+    }
+    
+    .status-message {
+        padding: 10px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -490,6 +659,15 @@ input[type="range"], input[type="number"] {
     
     #selected-bars-container {
         grid-template-columns: 1fr;
+    }
+    
+    .nav-bar .nav-link {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .bac-value {
+        font-size: 1.2rem;
     }
 }
 

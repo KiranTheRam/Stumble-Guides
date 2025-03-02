@@ -20,7 +20,6 @@ def find_bars():
     latitude = data.get('latitude', 39.9566)  # Default to Drexel University
     longitude = data.get('longitude', -75.1899)
     radius = data.get('radius', 1609)  # Default to 1 mile in meters
-    # radius = data.get('radius', 1609)  # Default to 1 mile in meters
     price_range = data.get('priceRange', [1, 4])  # Default to all price ranges
     limit = data.get('limit', 5)  # Default to 5 bars
     
@@ -29,9 +28,6 @@ def find_bars():
 
 @app.route('/api/route', methods=['POST'])
 def generate_route():
-    print(request)
-    print("______________")
-    print(request.json)
     data = request.json
     selected_bars = data.get('selectedBars', [])
     
@@ -41,12 +37,37 @@ def generate_route():
     # Get directions between locations
     directions = get_directions(optimized_route)
 
-    print("Route: ", optimized_route)
-    print("directions: ", directions)
-
     return jsonify({
         'route': optimized_route,
         'directions': directions
+    })
+
+# API endpoint for BAC calculation (if you need server-side calculation)
+@app.route('/api/bac/calculate', methods=['POST'])
+def calculate_bac():
+    data = request.json
+    personal_info = data.get('personalInfo', {})
+    drinks = data.get('drinks', [])
+    
+    # You could implement server-side BAC calculation here if needed
+    # For now, we're doing calculations client-side in JavaScript
+    
+    return jsonify({
+        'success': True,
+        'message': 'BAC calculation request received'
+    })
+
+# API endpoint to save user profile data (optional, for future use)
+@app.route('/api/user/profile', methods=['POST'])
+def save_user_profile():
+    data = request.json
+    
+    # Here you would typically save this to a database
+    # For now, we're storing everything in the browser's localStorage
+    
+    return jsonify({
+        'success': True,
+        'message': 'Profile saved successfully'
     })
 
 if __name__ == '__main__':
