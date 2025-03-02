@@ -16,7 +16,9 @@
             <button id="theme-toggle" class="theme-toggle">☀️</button>
         </header>
         
-        <div class="search-controls">
+        <!-- Location Panel -->
+        <div class="search-panel">
+            <h3 class="panel-title">Location</h3>
             <div class="location-control">
                 <div class="control-group location-input">
                     <label for="custom-location">Custom Location:</label>
@@ -29,7 +31,11 @@
                     </div>
                 </div>
             </div>
-            
+        </div>
+        
+        <!-- Search Filters Panel -->
+        <div class="search-panel">
+            <h3 class="panel-title">Search Filters</h3>
             <div class="filter-controls">
                 <div class="control-group">
                     <label for="radius">Search Radius:</label>
@@ -46,8 +52,6 @@
                         <button class="price-btn active" data-value="4">$$$$</button>
                     </div>
                 </div>
-                
-                <!-- Number of bars input removed, set to 20 in JavaScript -->
             </div>
             
             <button id="find-bars-btn" class="primary-btn">Find Bars</button>

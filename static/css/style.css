@@ -79,8 +79,8 @@ header p {
     background-color: var(--light-gray);
 }
 
-/* Search Controls */
-.search-controls {
+/* Search Panel */
+.search-panel {
     background-color: var(--card-background);
     padding: 20px;
     border-radius: 8px;
@@ -89,6 +89,14 @@ header p {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.panel-title {
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
 }
 
 .location-control {
@@ -459,7 +467,7 @@ input[type="range"], input[type="number"] {
         padding: 10px;
     }
     
-    .search-controls {
+    .search-panel {
         padding: 15px;
     }
     

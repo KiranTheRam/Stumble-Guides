@@ -23,6 +23,8 @@ if not GOOGLE_MAPS_API_KEY:
 DEFAULT_LAT = 39.9566
 DEFAULT_LNG = -75.1899
 
+
+
 def debug_bar_search(radius_miles=1, minprice=1, maxprice=4):
     """
     Search for bars near default location and output all raw results
@@ -44,8 +46,8 @@ def debug_bar_search(radius_miles=1, minprice=1, maxprice=4):
     params = {
         'location': f"{DEFAULT_LAT},{DEFAULT_LNG}",
         'radius': radius_meters,
-        # 'type': 'bar', #TODO: ?????
-        'keyword': 'bar',  # TODO: ?????
+        'type': 'bar',
+        # 'keyword': 'bar',
         'key': GOOGLE_MAPS_API_KEY,
         'minprice': minprice,
         'maxprice': maxprice
