@@ -10,31 +10,121 @@ let locationSource = 'default'; // 'default', 'gps', or 'custom'
 function initMap(center = { lat: 39.9566, lng: -75.1899 }) {
     // Initialize geocoder
     geocoder = new google.maps.Geocoder();
+    
+    // Define map styles for dark mode
+    const darkModeStyles = [
+        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+        {
+            featureType: "administrative.locality",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+        },
+        {
+            featureType: "poi",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+        },
+        {
+            featureType: "poi.park",
+            elementType: "geometry",
+            stylers: [{ color: "#263c3f" }],
+        },
+        {
+            featureType: "poi.park",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#6b9a76" }],
+        },
+        {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#38414e" }],
+        },
+        {
+            featureType: "road",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#212a37" }],
+        },
+        {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#9ca5b3" }],
+        },
+        {
+            featureType: "road.highway",
+            elementType: "geometry",
+            stylers: [{ color: "#746855" }],
+        },
+        {
+            featureType: "road.highway",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#1f2835" }],
+        },
+        {
+            featureType: "road.highway",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#f3d19c" }],
+        },
+        {
+            featureType: "transit",
+            elementType: "geometry",
+            stylers: [{ color: "#2f3948" }],
+        },
+        {
+            featureType: "transit.station",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+        },
+        {
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{ color: "#17263c" }],
+        },
+        {
+            featureType: "water",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#515c6d" }],
+        },
+        {
+            featureType: "water",
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#17263c" }],
+        },
+    ];
+    
+    // Define light mode styles
+    const lightModeStyles = [
+        {
+            "featureType": "all",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#f5f5f5" }]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#c9c9c9" }]
+        },
+        {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{ "color": "#9e9e9e" }]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{ "color": "#ffffff" }]
+        }
+    ];
+    
+    // Determine which style to use based on document class
+    const isDarkMode = document.documentElement.classList.contains('dark-mode');
+    const mapStyles = isDarkMode ? darkModeStyles : lightModeStyles;
+    
     map = new google.maps.Map(document.getElementById("map"), {
         center: center,
         zoom: 14,
-        styles: [
-            {
-                "featureType": "all",
-                "elementType": "geometry",
-                "stylers": [{ "color": "#f5f5f5" }]
-            },
-            {
-                "featureType": "water",
-                "elementType": "geometry",
-                "stylers": [{ "color": "#c9c9c9" }]
-            },
-            {
-                "featureType": "water",
-                "elementType": "labels.text.fill",
-                "stylers": [{ "color": "#9e9e9e" }]
-            },
-            {
-                "featureType": "road",
-                "elementType": "geometry",
-                "stylers": [{ "color": "#ffffff" }]
-            }
-        ]
+        styles: mapStyles
     });
     
     // Try to get user's current location if allowed

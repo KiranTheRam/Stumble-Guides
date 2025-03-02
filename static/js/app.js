@@ -8,13 +8,14 @@ const API_ENDPOINTS = {
 let allBars = [];
 let selectedBars = [];
 let routeInfo = null;
+let isDarkMode = true; // Default to dark mode
 
 // DOM Elements
 const findBarsBtn = document.getElementById('find-bars-btn');
 const generateRouteBtn = document.getElementById('generate-route-btn');
 const radiusInput = document.getElementById('radius');
 const radiusValue = document.getElementById('radius-value');
-const barLimitInput = document.getElementById('bar-limit');
+const themeToggleBtn = document.getElementById('theme-toggle');
 const priceBtns = document.querySelectorAll('.price-btn');
 const barsContainer = document.getElementById('bars-container');
 const selectedBarsContainer = document.getElementById('selected-bars-container');
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     findBarsBtn.addEventListener('click', findBars);
     generateRouteBtn.addEventListener('click', generateRoute);
     radiusInput.addEventListener('input', updateRadiusDisplay);
+    themeToggleBtn.addEventListener('click', toggleTheme);
     
     // Price range filter
     priceBtns.forEach(btn => {
@@ -47,6 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
     handleWindowResize();
 });
 
+// Toggle between dark and light mode
+function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    
+    if (isDarkMode) {
+        document.documentElement.classList.add('dark-mode');
+        themeToggleBtn.textContent = '☀️'; // Sun emoji for toggle to light mode
+    } else {
+        document.documentElement.classList.remove('dark-mode');
+        themeToggleBtn.textContent = '🌙'; // Moon emoji for toggle to dark mode
+    }
+    
+    // Force map redraw by triggering resize
+    google.maps.event.trigger(map, 'resize');
+}
+
 // Handle responsive layout adjustments
 function handleWindowResize() {
     const width = window.innerWidth;
@@ -54,9 +72,6 @@ function handleWindowResize() {
     // Adjust UI based on screen size
     if (width < 576) {
         // Mobile adjustments
-        if (barLimitInput.value > 5) {
-            barLimitInput.value = 5; // Reduce max bars on mobile
-        }
     }
     
     // Refresh layout for drag and drop if active
@@ -104,7 +119,7 @@ function updateRadiusDisplay() {
 // Find bars based on filters
 async function findBars() {
     const radius = parseFloat(radiusInput.value) * 1609; // Convert miles to meters
-    const limit = parseInt(barLimitInput.value);
+    const limit = 20; // Fixed at 20 bars
     
     // Get selected price levels
     const priceRange = [];
@@ -230,9 +245,21 @@ function updateSelectedBarsUI() {
     }
     
     selectedBars.forEach((bar, index) => {
+        // Add distance info between bars
+        if (index > 0 && routeInfo && routeInfo.directions && routeInfo.directions.routes && routeInfo.directions.routes[index-1]) {
+            const distanceInfo = document.createElement('div');
+            distanceInfo.className = 'bar-distance-info';
+            const route = routeInfo.directions.routes[index-1];
+            distanceInfo.innerHTML = `
+                <span>↓ ${route.distance} • ${route.duration} walking ↓</span>
+            `;
+            selectedBarsContainer.appendChild(distanceInfo);
+        }
+        
         const barCard = document.createElement('div');
         barCard.className = 'bar-card sortable-item';
         barCard.dataset.barId = bar.id;
+        barCard.style.width = '100%';
         barCard.innerHTML = `
             <img src="${bar.photo || '/static/images/default-bar.jpg'}" class="bar-image" alt="${bar.name}">
             <div class="bar-details">
@@ -360,6 +387,9 @@ async function generateRoute() {
         // Update UI
         totalDistance.textContent = routeInfo.directions.total_distance_text;
         totalTime.textContent = routeInfo.directions.total_duration_text;
+        
+        // Update selected bars UI to include distance info
+        updateSelectedBarsUI();
         
         // Draw route on map with directions data
         drawRoute(routeInfo.route, routeInfo.directions);
